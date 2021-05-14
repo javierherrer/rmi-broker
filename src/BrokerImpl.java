@@ -1,15 +1,20 @@
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
 public class BrokerImpl extends UnicastRemoteObject implements Broker {
+    private static final String BROKER_HOSTNAME = "localhost:32001";
+
     Map<String, Servidor> servidores;
     Servicios servicios;
 
     public BrokerImpl() throws RemoteException {
         super();
+        servidores = new HashMap<>();
+        servicios = new Servicios();
     }
 
     /**
@@ -117,15 +122,16 @@ public class BrokerImpl extends UnicastRemoteObject implements Broker {
     }
 
     public static void main(String args[]) {
-        System.setProperty("java.security.policy", "src/java.policy");
-        System.setSecurityManager(new SecurityManager());
-
+        System.setProperty("java.security.policy", "./java.policy");
+//        if (System.getSecurityManager() == null) {
+//            System.setSecurityManager(new SecurityManager());
+//        }
         String hostName = "localhost:32001";
         try {
             BrokerImpl obj = new BrokerImpl();
             System.out.println("Creado!");
 
-            Naming.rebind("//" + hostName + "/Broker", obj);
+            Naming.rebind("//" + BROKER_HOSTNAME + "/Broker", obj);
             System.out.println("Estoy registrado!");
         } catch (Exception ex) {
             System.out.println(ex);

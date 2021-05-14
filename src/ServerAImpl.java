@@ -75,6 +75,16 @@ public class ServerAImpl extends UnicastRemoteObject implements ServerInteface {
             Broker broker =
                     (Broker) Naming.lookup("//" + BROKER_HOSTNAME + "/Broker");
             broker.registrar_servidor(SERVER_NAME, SERVER_HOSTNAME);
+            broker.registrar_servicio(SERVER_NAME, DAR_FECHA, new Vector(), DAR_FECHA.getClass().getSimpleName());
+            broker.registrar_servicio(SERVER_NAME, DAR_HORA, new Vector(), DAR_HORA.getClass().getSimpleName());
+
+            Respuesta respuesta = broker.ejecutar_servicio(DAR_FECHA, new Vector());
+            System.out.println(respuesta);
+
+            respuesta = broker.ejecutar_servicio(DAR_HORA, new Vector());
+            System.out.println(respuesta);
+
+
         } catch (Exception ex) {
             System.out.println(ex);
         }
