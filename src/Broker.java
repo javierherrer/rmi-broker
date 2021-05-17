@@ -10,7 +10,7 @@ public interface Broker extends Remote {
             throws RemoteException;
     void registrar_servicio(String nombre_servidor,
                             String nom_servicio, Vector lista_param,
-                            String tipo_retorno) throws RemoteException;
+                            String tipo_retorno) throws RemoteException, ClassNotFoundException;
     void baja_servicio(String nombre_servidor,
                        String nom_servicio) throws RemoteException;
 

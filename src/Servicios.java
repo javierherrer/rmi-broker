@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Servicios {
+public class Servicios implements Serializable {
     private Map<String, Servicio> servicios;
 
     public Servicios() {
@@ -26,4 +27,10 @@ public class Servicios {
         return servicios.get(nom_servicio);
     }
 
+    @Override
+    public String toString() {
+        return "Servicios{" +
+                "servicios=" + servicios.toString() +
+                '}';
+    }
 }

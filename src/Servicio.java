@@ -1,18 +1,30 @@
+import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.rmi.Naming;
 
+import java.util.Arrays;
 import java.util.Vector;
 
-public class Servicio {
+public class Servicio implements Serializable {
     private String nombre; //Nombre del servicio
-    private String tipoRetorno; //Tipo del objeto de retorno del servicio
-    private Vector parametros; //Array con los parámetros del servicio
+    private Class tipoRetorno; //Tipo del objeto de retorno del servicio
+    private Class partypes[];
     private Servidor servidor;
 
-    public Servicio(String nom, String retorno, Vector param, Servidor server) {
+    public Servicio(String nom, String retorno, Vector param, Servidor server)
+            throws ClassNotFoundException {
         nombre = nom;
-        tipoRetorno = retorno;
-        parametros = param;
+        if (retorno.equals("void")) {
+            tipoRetorno = null;
+        } else {
+            tipoRetorno = Class.forName(retorno);
+        }
         servidor = server;
+
+        partypes = new Class[param.size()];
+        for (int i = 0; i < param.size(); i++) {
+            partypes[i] = (Class) param.get(i);
+        }
     }
 
     public String getNombre() {
@@ -20,36 +32,59 @@ public class Servicio {
     }
 
     public Respuesta ejecutar_servicio(Vector parametros_servicio) {
-        String tipo1 = "";
-        String tipo2 = "";
-        Object o1 = null;
-        Object o2 = null;
+        Object obj = null;
+        Class cls = null;
+        Object arglist[] = new Object[parametros_servicio.size()];
 
-        if (parametros.size() != parametros_servicio.size()) {
+        if (partypes.length != parametros_servicio.size()) {
             return new Respuesta("Longitud de parámetros incorrecta.");
         }
 
         for (int i = 0; i < parametros_servicio.size(); i++) {
-            o1 = parametros_servicio.get(i);
-            tipo1 = o1.getClass().getSimpleName();
-            o2 = parametros.get(i);
-            tipo2 = o2.getClass().getSimpleName();
-
-            if (! tipo1.equals(tipo2)) {
+            obj = parametros_servicio.get(i);
+            cls = partypes[i];
+            if ( ! cls.equals(obj.getClass()) ) {
                 return new Respuesta("Tipos de parámetro no concuerdan");
+            } else {
+                arglist[i] = obj;
             }
         }
 
         Respuesta respuesta = new Respuesta();
         try {
-            ServerInteface server =
-                    (ServerInteface) Naming.lookup("//" +
-                            servidor.getHostname() + "/MyServices");
-            respuesta = server.ejecutar_servicio(nombre, parametros_servicio);
+            Object server =
+                    (Object) Naming.lookup("//" +
+                            servidor.getHostname() + "/" + servidor.getName());
+            Class srvrCls = server.getClass();
+            Method meth = srvrCls.getMethod(nombre, partypes);
+            Object retobj;
+            if (parametros_servicio.isEmpty()) {
+                retobj = meth.invoke(server);
+            } else {
+                retobj = meth.invoke(server, arglist);
+            }
+
+            if (tipoRetorno == null) {
+                respuesta = new Respuesta(null);
+            } else if ( ! tipoRetorno.equals(retobj.getClass())) {
+                respuesta = new Respuesta("Tipos de respuesta no concuerdan");
+            } else {
+                respuesta = new Respuesta(retobj);
+            }
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         } finally {
             return respuesta;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Servicio{" +
+                "nombre='" + nombre + '\'' +
+                ", tipoRetorno=" + tipoRetorno +
+                ", partypes=" + Arrays.toString(partypes) +
+                ", servidor=" + servidor.toString() +
+                '}';
     }
 }

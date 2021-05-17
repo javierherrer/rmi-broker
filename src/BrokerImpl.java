@@ -50,7 +50,7 @@ public class BrokerImpl extends UnicastRemoteObject implements Broker {
     @Override
     public void registrar_servicio(String nombre_servidor, String nom_servicio,
                                    Vector lista_param, String tipo_retorno)
-            throws RemoteException{
+            throws RemoteException, ClassNotFoundException {
 
         Servidor servidor = servidores.get(nombre_servidor);
         if (servidor != null) {
@@ -122,7 +122,7 @@ public class BrokerImpl extends UnicastRemoteObject implements Broker {
     }
 
     public static void main(String args[]) {
-        System.setProperty("java.security.policy", "./java.policy");
+        System.setProperty("java.security.policy", "src/java.policy");
 //        if (System.getSecurityManager() == null) {
 //            System.setSecurityManager(new SecurityManager());
 //        }

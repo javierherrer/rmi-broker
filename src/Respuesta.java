@@ -1,24 +1,26 @@
 import java.io.Serializable;
 
 public class Respuesta implements Serializable {
-    private String respuesta;
+    private Object respuesta;
 
     public Respuesta() {
         respuesta = "No hay respuesta";
     }
 
-    public Respuesta(String cadena) {
-        respuesta = cadena;
-    }
-
-    public Respuesta(int num) {
-        respuesta = String.valueOf(num);
+    public Respuesta(Object resp) {
+        respuesta = resp;
     }
 
     @Override
     public String toString() {
-        return "Respuesta{" +
-                "respuesta='" + respuesta + '\'' +
-                '}';
+        if (respuesta == null) {
+            return "Respuesta{" +
+                    "respuesta='" + "null" + '\'' +
+                    '}';
+        } else {
+            return "Respuesta{" +
+                    "respuesta='" + respuesta.toString() + '\'' +
+                    '}';
+        }
     }
 }

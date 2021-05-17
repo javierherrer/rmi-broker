@@ -1,4 +1,6 @@
-public class Servidor{
+import java.io.Serializable;
+
+public class Servidor implements Serializable {
     private String nombre; //Nombre identificador del servidor
     private String hostname; //IP y puerto del servidor
 
@@ -9,6 +11,10 @@ public class Servidor{
 
     public String getHostname() {
         return hostname;
+    }
+
+    public String getName() {
+        return nombre;
     }
 
     @Override
