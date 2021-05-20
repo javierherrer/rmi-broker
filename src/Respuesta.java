@@ -4,7 +4,7 @@ public class Respuesta implements Serializable {
     private Object respuesta;
 
     public Respuesta() {
-        respuesta = "No hay respuesta";
+        respuesta = null;
     }
 
     public Respuesta(Object resp) {
@@ -14,13 +14,9 @@ public class Respuesta implements Serializable {
     @Override
     public String toString() {
         if (respuesta == null) {
-            return "Respuesta{" +
-                    "respuesta='" + "null" + '\'' +
-                    '}';
+            return "Respuesta{"+ "null" +'}';
         } else {
-            return "Respuesta{" +
-                    "respuesta='" + respuesta.toString() + '\'' +
-                    '}';
+            return respuesta.toString();
         }
     }
 }
