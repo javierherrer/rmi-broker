@@ -21,7 +21,7 @@ public interface Broker extends Remote {
     //Ejecutar servicio síncrono:
     Respuesta ejecutar_servicio(String nom_servicio,
                                 Vector parametros_servicio)
-            throws RemoteException;
+            throws RemoteException,Exception;
     //Ejecutar servicio asíncrono (versión más avanzada):
     void ejecutar_servicio_asinc(String nom_servicio,
                                  Vector parametros_servicio)

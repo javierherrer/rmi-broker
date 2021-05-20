@@ -1,6 +1,7 @@
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class Servicios implements Serializable {
     private Map<String, Servicio> servicios;
@@ -20,7 +21,7 @@ public class Servicios implements Serializable {
     }
 
     public boolean dar_baja_servicio(String nom_servicio){
-        return (servicios.remove(nom_servicio)==null);
+        return (servicios.remove(nom_servicio)!=null);
     }
 
     public Servicio obtener_servicio(String nom_servicio) {
@@ -32,5 +33,9 @@ public class Servicios implements Serializable {
         return "Servicios{" +
                 "servicios=" + servicios.toString() +
                 '}';
+    }
+
+    public ArrayList<String> obtener_nombres_servicios() {
+        return new ArrayList<String>(servicios.keySet());
     }
 }

@@ -62,7 +62,7 @@ public class ServerBImpl extends UnicastRemoteObject implements ServerB {
      *
      */
     public static void main(String[] args) {
-        System.setProperty("java.security.policy", "src/java.policy");
+        System.setProperty("java.security.policy", "java.policy");
         System.setSecurityManager(new SecurityManager());
 
         try {
@@ -79,7 +79,7 @@ public class ServerBImpl extends UnicastRemoteObject implements ServerB {
             broker.registrar_servicio(SERVER_NAME, GET_NAME_OF_COLLECTION, new Vector(), "java.lang.String");
 
             Vector param = new Vector();
-            param.add(Class.forName("java.lang.String"));
+            param.add(String.class);
             broker.registrar_servicio(SERVER_NAME, SET_NAME_OF_COLLECTION, param, "void");
         } catch (Exception ex) {
             System.out.println(ex);

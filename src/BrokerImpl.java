@@ -95,7 +95,7 @@ public class BrokerImpl extends UnicastRemoteObject implements Broker {
     @Override
     public Respuesta ejecutar_servicio(String nom_servicio,
                                        Vector parametros_servicio)
-            throws RemoteException{
+            throws RemoteException,Exception{
         Servicio servicio = servicios.obtener_servicio(nom_servicio);
         Respuesta respuesta = new Respuesta();
         if (servicio != null) {
@@ -122,10 +122,10 @@ public class BrokerImpl extends UnicastRemoteObject implements Broker {
     }
 
     public static void main(String args[]) {
-        System.setProperty("java.security.policy", "src/java.policy");
-//        if (System.getSecurityManager() == null) {
-//            System.setSecurityManager(new SecurityManager());
-//        }
+        System.setProperty("java.security.policy", "java.policy");
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
         String hostName = "localhost:32001";
         try {
             BrokerImpl obj = new BrokerImpl();

@@ -30,52 +30,57 @@ public class Servicio implements Serializable {
     public String getNombre() {
         return nombre;
     }
+    public Class[] getPartypes(){
+        return partypes;
+    }
+    public Class getTipoRetorno(){
+        return tipoRetorno;
+    }
 
-    public Respuesta ejecutar_servicio(Vector parametros_servicio) {
+    public Respuesta ejecutar_servicio(Vector parametros_servicio) throws Exception{
         Object obj = null;
         Class cls = null;
         Object arglist[] = new Object[parametros_servicio.size()];
 
         if (partypes.length != parametros_servicio.size()) {
-            return new Respuesta("Longitud de parámetros incorrecta.");
+            throw new Exception("Longitud de parámetros incorrecta.");
         }
 
         for (int i = 0; i < parametros_servicio.size(); i++) {
             obj = parametros_servicio.get(i);
             cls = partypes[i];
             if ( ! cls.equals(obj.getClass()) ) {
-                return new Respuesta("Tipos de parámetro no concuerdan");
+                throw new Exception("Tipos de parámetro no concuerdan");
             } else {
                 arglist[i] = obj;
             }
         }
 
         Respuesta respuesta = new Respuesta();
-        try {
-            Object server =
-                    (Object) Naming.lookup("//" +
-                            servidor.getHostname() + "/" + servidor.getName());
-            Class srvrCls = server.getClass();
-            Method meth = srvrCls.getMethod(nombre, partypes);
-            Object retobj;
-            if (parametros_servicio.isEmpty()) {
-                retobj = meth.invoke(server);
-            } else {
-                retobj = meth.invoke(server, arglist);
-            }
-
-            if (tipoRetorno == null) {
-                respuesta = new Respuesta(null);
-            } else if ( ! tipoRetorno.equals(retobj.getClass())) {
-                respuesta = new Respuesta("Tipos de respuesta no concuerdan");
-            } else {
-                respuesta = new Respuesta(retobj);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            return respuesta;
+        
+        Object server =
+                (Object) Naming.lookup("//" +
+                        servidor.getHostname() + "/" + servidor.getName());
+        Class srvrCls = server.getClass();
+        Method meth = srvrCls.getMethod(nombre, partypes);
+        Object retobj;
+        if (parametros_servicio.isEmpty()) {
+            retobj = meth.invoke(server);
+        } else {
+            retobj = meth.invoke(server, arglist);
         }
+
+        if (tipoRetorno == null) {
+            respuesta = new Respuesta(null);
+        } else if ( ! tipoRetorno.equals(retobj.getClass())) {
+            respuesta = new Respuesta();
+            throw new Exception("Tipos de respuesta no concuerdan");
+        } else {
+            respuesta = new Respuesta(retobj);
+        }
+    
+        return respuesta;
+        
     }
 
     @Override
