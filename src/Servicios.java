@@ -3,6 +3,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 
+/**
+ * Almacena el nombre identificador del servidor, además de la IP y puerto.
+ */
 public class Servicios implements Serializable {
     private Map<String, Servicio> servicios;
 

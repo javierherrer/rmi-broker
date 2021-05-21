@@ -122,10 +122,10 @@ public class BrokerImpl extends UnicastRemoteObject implements Broker {
     }
 
     public static void main(String args[]) {
-        System.setProperty("java.security.policy", "java.policy");
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new SecurityManager());
-        }
+//        System.setProperty("java.security.policy", "java.policy");
+//        if (System.getSecurityManager() == null) {
+//            System.setSecurityManager(new SecurityManager());
+//        }
         String hostName = "localhost:32001";
         try {
             BrokerImpl obj = new BrokerImpl();

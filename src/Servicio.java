@@ -5,6 +5,13 @@ import java.rmi.Naming;
 import java.util.Arrays;
 import java.util.Vector;
 
+/**
+ * Función que ofrece un servidor y queda registrada en el Broker. Desde ella,
+ *  el Broker ejecuta el servicio realizando un lookup del servidor y,
+ *  posteriormente, ejecutando el método de la clase en cuestión utilizando
+ *  la reflectividad en Java: getClass, getMethod, invoke. Y obteniendo una
+ *  respuesta (tipoRetorno) que será devuelta al cliente.
+ */
 public class Servicio implements Serializable {
     private String nombre; //Nombre del servicio
     private Class tipoRetorno; //Tipo del objeto de retorno del servicio

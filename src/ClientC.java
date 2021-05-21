@@ -3,7 +3,8 @@ import java.util.Vector;
 import java.util.Scanner;
 import java.util.ArrayList;
 /**
- * El programa cliente que invoca de manera remota los métodos del servidor
+ * El programa cliente que puede invocar de manera remota los servicios de los
+ *  servidores desde el  Broker.
  *
  */
 public class ClientC {
@@ -14,12 +15,8 @@ public class ClientC {
     private static final String GET_NAME_OF_COLLECTION = "name_of_collection";
     private static final String SET_NAME_OF_COLLECTION = "set_name_of_collection";
 
-    /**
-     *
-     *
-     */
     public static void main(String[] args) {
-        System.setProperty("java.security.policy", "java.policy");
+        System.setProperty("java.security.policy", "src/java.policy");
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }

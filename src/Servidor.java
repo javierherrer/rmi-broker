@@ -1,5 +1,8 @@
 import java.io.Serializable;
 
+/**
+ * Almacena el nombre identificador del servidor, además de la IP y puerto.
+ */
 public class Servidor implements Serializable {
     private String nombre; //Nombre identificador del servidor
     private String hostname; //IP y puerto del servidor

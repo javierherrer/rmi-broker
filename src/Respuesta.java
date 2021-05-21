@@ -1,5 +1,9 @@
 import java.io.Serializable;
 
+/**
+ * Tipo de dato genérico cuya función es almacenar el valor devuelto por la
+ *  función ejecutar_servicio.
+ */
 public class Respuesta implements Serializable {
     private Object respuesta;
 
