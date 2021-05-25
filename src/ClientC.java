@@ -8,21 +8,19 @@ import java.util.ArrayList;
  *
  */
 public class ClientC {
-    private static final String BROKER_HOSTNAME = "localhost:32001";
-    private static final String DAR_HORA = "dar_hora";
-    private static final String DAR_FECHA = "dar_fecha";
-    private static final String GET_NUMBER_OF_BOOKS = "number_of_books";
-    private static final String GET_NAME_OF_COLLECTION = "name_of_collection";
-    private static final String SET_NAME_OF_COLLECTION = "set_name_of_collection";
+    private static String brokerHostName;
 
     public static void main(String[] args) {
-        System.setProperty("java.security.policy", "src/java.policy");
+        System.setProperty("java.security.policy", "java.policy");
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
+
+        brokerHostName = args[0];
+
         try {
             Broker broker =
-                    (Broker) Naming.lookup("//" + BROKER_HOSTNAME + "/Broker");
+                    (Broker) Naming.lookup("//" + brokerHostName + "/Broker");
 
             Boolean fin=false;
             while(!fin){//En bucle, muestra los servicios por pantalla y le da a elegir 1 al usuario
@@ -43,7 +41,7 @@ public class ClientC {
                 if(input.equals("fin")){//Si escribe fin, acaba el bucle
                     fin=true;
                 }else if(input.equals("r")){
-                    broker = (Broker) Naming.lookup("//" + BROKER_HOSTNAME + "/Broker");
+                    broker = (Broker) Naming.lookup("//" + brokerHostName + "/Broker");
                     servicios = broker.lista_servicios();
                     lista_servicios=servicios.obtener_nombres_servicios();
                 }else{

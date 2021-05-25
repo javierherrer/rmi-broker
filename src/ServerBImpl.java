@@ -11,9 +11,10 @@ public class ServerBImpl extends UnicastRemoteObject implements ServerB {
     private static final String GET_NUMBER_OF_BOOKS = "number_of_books";
     private static final String GET_NAME_OF_COLLECTION = "name_of_collection";
     private static final String SET_NAME_OF_COLLECTION = "set_name_of_collection";
-    private static final String BROKER_HOSTNAME = "localhost:32001";
     private static final String SERVER_NAME = "ServerB";
-    private static final String SERVER_HOSTNAME = "localhost:32001";
+    private static String brokerHostName = "localhost:32001";
+    private static String serverIP = "localhost";
+    private static String serverPort = "32001";
 
     private int m_number_of_books;
     private String m_name_of_collection;
@@ -60,21 +61,27 @@ public class ServerBImpl extends UnicastRemoteObject implements ServerB {
      * Crea el objeto remoto
      * Registra el objeto remoto
      *
+     *
      */
+    // <brokerIP>:<brokerPort> <serverIP> <serverPort>
     public static void main(String[] args) {
-        System.setProperty("java.security.policy", "src/java.policy");
+        System.setProperty("java.security.policy", "java.policy");
         System.setSecurityManager(new SecurityManager());
+
+        brokerHostName = args[0];
+        serverIP = args[1];
+        serverPort = args[2];
 
         try {
             ServerBImpl obj = new ServerBImpl();
             System.out.println("Creado!");
 
-            Naming.rebind("//" + SERVER_HOSTNAME + "/" + SERVER_NAME, obj);
+            Naming.rebind("//" + "localhost:" + serverPort + "/" + SERVER_NAME, obj);
             System.out.println("Estoy registrado!");
 
             Broker broker =
-                    (Broker) Naming.lookup("//" + BROKER_HOSTNAME + "/Broker");
-            broker.registrar_servidor(SERVER_NAME, SERVER_HOSTNAME);
+                    (Broker) Naming.lookup("//" + brokerHostName + "/Broker");
+            broker.registrar_servidor(SERVER_NAME,serverIP + ":" + serverPort);
             broker.registrar_servicio(SERVER_NAME, GET_NUMBER_OF_BOOKS, new Vector(), "java.lang.Integer");
             broker.registrar_servicio(SERVER_NAME, GET_NAME_OF_COLLECTION, new Vector(), "java.lang.String");
 

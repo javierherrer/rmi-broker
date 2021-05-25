@@ -13,6 +13,7 @@ public interface Broker extends Remote {
                             String tipo_retorno) throws RemoteException, ClassNotFoundException;
     void baja_servicio(String nombre_servidor,
                        String nom_servicio) throws RemoteException;
+    void baja_servidor(String nombre_servidor) throws RemoteException;
 
     //API CLIENTES
 

@@ -14,12 +14,15 @@ public class ServerAImpl extends UnicastRemoteObject implements ServerA {
     private static final String DAR_FECHA = "dar_fecha";
     private static final String GUARDAR_VARIABLE = "guardar_variable";
     private static final String COGER_VARIABLE = "coger_variable";
-    private static final String BROKER_HOSTNAME = "localhost:32001";
     private static final String SERVER_NAME = "ServerA";
-    private static final String SERVER_HOSTNAME = "localhost:32001";
+    private static String brokerHostName = "localhost:32001";
+    private static  String serverIP = "localhost";
+    private static  String serverPort = "32001";
     private Integer variable;
+
     public ServerAImpl() throws RemoteException {
         super();
+        variable = 0;
     }
 
     public int dar_hora() throws RemoteException {
@@ -44,21 +47,23 @@ public class ServerAImpl extends UnicastRemoteObject implements ServerA {
     
 
     public static void main (String [] args) {
-        System.setProperty("java.security.policy", "src/java.policy");
+        System.setProperty("java.security.policy", "java.policy");
         System.setSecurityManager(new SecurityManager());
+
+        brokerHostName = args[0];
+        serverIP = args[1];
+        serverPort = args[2];
 
         try {
             ServerAImpl obj = new ServerAImpl();
             System.out.println("Creado!");
 
-            Naming.rebind("//" + SERVER_HOSTNAME + "/" + SERVER_NAME, obj);
+            Naming.rebind("//" + "localhost:" + serverPort + "/" + SERVER_NAME, obj);
             System.out.println("Estoy registrado!");
             
             Broker broker =
-                    (Broker) Naming.lookup("//" + BROKER_HOSTNAME + "/Broker");
-            broker.registrar_servidor(SERVER_NAME, SERVER_HOSTNAME);
-            //broker.registrar_servicio(SERVER_NAME, DAR_FECHA, new Vector(), "java.lang.String");
-            //broker.registrar_servicio(SERVER_NAME, DAR_HORA, new Vector(), "java.lang.Integer");
+                    (Broker) Naming.lookup("//" + brokerHostName + "/Broker");
+            broker.registrar_servidor(SERVER_NAME, serverIP + ":" + serverPort);
 
             ArrayList<Servicio> servicios=new ArrayList<Servicio>();
             ArrayList<Boolean> serviciosUp=new ArrayList<Boolean>();
@@ -89,6 +94,8 @@ public class ServerAImpl extends UnicastRemoteObject implements ServerA {
                     }
                     System.out.println(servicios.get(i).getNombre());
                 }
+                System.out.println("O escribe \"fin\" para salir:");
+
                 //Seleccionamos el servicio
                 Scanner scanner = new Scanner(System.in);
                 String input = scanner.nextLine();
@@ -118,9 +125,15 @@ public class ServerAImpl extends UnicastRemoteObject implements ServerA {
                 System.out.flush();  
 
             }
+            // Damos de baja todos los servicios
+            for(int i = 0; i < servicios.size(); i++){
+                Servicio s=servicios.get(i);
+                if (serviciosUp.get(i)) {
+                        broker.baja_servicio(SERVER_NAME, s.getNombre());
+                }
+            }
 
-
-            
+            broker.baja_servidor(SERVER_NAME);
 
         } catch (Exception ex) {
             System.out.println(ex);

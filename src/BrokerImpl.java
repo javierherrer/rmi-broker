@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Vector;
 
 public class BrokerImpl extends UnicastRemoteObject implements Broker {
-    private static final String BROKER_HOSTNAME = "localhost:32001";
+    private static String brokerHostName;
 
     Map<String, Servidor> servidores;
     Servicios servicios;
@@ -87,6 +87,22 @@ public class BrokerImpl extends UnicastRemoteObject implements Broker {
         }
     }
 
+    /**
+     * Dar de baja servidor
+     * @param nombre_servidor
+     */
+    @Override
+    public void baja_servidor(String nombre_servidor)
+            throws RemoteException{
+        boolean eliminado = (servidores.remove(nombre_servidor)!=null);
+
+        if (eliminado) {
+            System.out.println("Servidor \""+nombre_servidor+ "\" eliminado.");
+        } else{
+            System.out.println("Servidor \""+nombre_servidor+ "\" no existe");
+        }
+    }
+
     @Override
     public Servicios lista_servicios() throws RemoteException{
         return servicios;
@@ -126,12 +142,12 @@ public class BrokerImpl extends UnicastRemoteObject implements Broker {
 //        if (System.getSecurityManager() == null) {
 //            System.setSecurityManager(new SecurityManager());
 //        }
-        String hostName = "localhost:32001";
+        brokerHostName = args[0];
         try {
             BrokerImpl obj = new BrokerImpl();
             System.out.println("Creado!");
 
-            Naming.rebind("//" + BROKER_HOSTNAME + "/Broker", obj);
+            Naming.rebind("//" + brokerHostName + "/Broker", obj);
             System.out.println("Estoy registrado!");
         } catch (Exception ex) {
             System.out.println(ex);
